@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ops/screen/homeScreen/controller/home_screen_controller.dart';
 import 'package:ops/navigation/route_constants.dart';
 import 'package:ops/navigation/router.dart';
+import 'package:ops/util/function.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:telephony/telephony.dart' as tel;
@@ -39,8 +40,9 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 }
 
 //receiving background message
-backgrounMessageHandler(tel.SmsMessage message) async {
-  print('backgound message handle ----Sender Name: ${message.address}'); //+977981******67, sender nubmer
+backgrounMessageHandler(tel.SmsMessage message)  async {
+  print(
+      'backgound message handle ----Sender Name: ${message.address}'); //+977981******67, sender nubmer
   print('backgound message handle ----Body: ${message.body}'); //sms text
 
   String? Senderno = message.address; //sender number
@@ -48,19 +50,36 @@ backgrounMessageHandler(tel.SmsMessage message) async {
   String? Body = message.body;
 
   final prefs = await SharedPreferences.getInstance();
-  final String? Number = prefs.getString('number');
-  String Message = "Sender Name: $Number \n Body: $Body";//Sender number and Message body
-  String mobileNumber = '+91${Number}';
+  String? savedNumber = prefs.getString('number');
+  String Message =
+      "Sender Name: ${message.address} \n Body: $Body"; //Sender number and Message body
+  String mobileNumber = '+91${savedNumber}';
+  print('odododododod Saved Number From MAIN.dart ${savedNumber}');
 
+  // CommonFunctions functionController = CommonFunctions();
+  List place = [
+    'i',
+    'am',
+    'post',
+    'api',
+    'response',
+    '$Message',
+  ];
+  double nu = 8888888;
+  await CommonFunctions().postGeoLocation(savedNumber ?? '', nu, place);
+  // await functionController.postGeoLocation(Number ??'', nu, place);
+  print("DATA SENT TO API");
   // MethodChannel platform = const MethodChannel("tyre.plex");
-  // await platform.invokeMethod("sendsms", <String, dynamic>{
-  //     "phone":mobileNumber,
-  //     "msg":Message,
+  // await platform.invokeMethod(
+  //   "sendsms",
+  //   <String, dynamic>{
+  //     "phone": mobileNumber,
+  //     "msg": Message,
   //   },
   // );
 
   // tel.Telephony.backgroundInstance.sendSms(to: '$Number', message: '$Message');
-   HomeScreenController().sendSms(Senderno, Body);
+  //  HomeScreenController().sendSms(Senderno, Body);
 }
 
 void main() async {
@@ -134,14 +153,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return Sizer(
-        builder: (BuildContext, Orientation, DeviceType) => GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'TyrePlex Ops',
-          initialRoute: SplashScreenRoute,
-          onGenerateRoute: onGenerateRoute,
-          
-        ),
-      );
-
+      builder: (BuildContext, Orientation, DeviceType) => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'TyrePlex Ops',
+        initialRoute: SplashScreenRoute,
+        onGenerateRoute: onGenerateRoute,
+      ),
+    );
   }
 }

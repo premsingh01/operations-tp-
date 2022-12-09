@@ -8,35 +8,50 @@ import android.os.Bundle
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.telephony.SmsManager
+import android.provider.Telephony
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-
-import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugins.GeneratedPluginRegistrant
+import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.EventChannel
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 
 
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterActivity() {
 
      val CHANNEL = "tyre.plex"
-//override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-//    val taskQueue =
-//        flutterPluginBinding.binaryMessenger.makeBackgroundTaskQueue()
-//    channel = MethodChannel(flutterPluginBinding.binaryMessenger, CHANNEL, StandardMethodCodec.INSTANCE, taskQueue)
-//    channel.setMethodCallHandler(this) {
-//        call, result ->
-//        if (call.method == "sendsms") {
-//                val phone = call.arguments<String>("phone")
-//                val msg = call.arguments<String>("msg")
-//                sendSms(phone, msg)
-//            } else {
-//                result.notImplemented()
-//
-//            }
-//    }
-//}
 
+//    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+//        super.configureFlutterEngine(flutterEngine)
+//        val smsReceiver = object : EventChannel.StreamHandler, BroadcastReceiver() {
+//            var eventSink: EventChannel.EventSink? = null
+//            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+//                eventSink = events
+//            }
+//
+//            override fun onCancel(arguments: Any?) {
+//                eventSink = null
+//            }
+//
+//            override fun onReceive(p0: Context?, p1: Intent?) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                    for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
+//                        eventSink?.success(sms.displayMessageBody)
+//                    }
+//                }
+//            }
+//        }
+//        registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//        EventChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+//            .setStreamHandler(smsReceiver)
+//    }
+
+// ...............................*..................*...........................*.....................*
 //     GeneratedPluginRegistrant.registerWith(flutterEngine)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -48,19 +63,37 @@ class MainActivity: FlutterActivity() {
                 if (phone != null && msg != null) {
                         sendSms(phone, msg)
                 }
-            } else {
+            }
+            else if(call.method == "receive_sms"){
+                val smsReceiver = object: BroadcastReceiver(){
+                    override fun onReceive(p0: Context?, p1: Intent?) {
+                        for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
+                            result.success(sms.displayMessageBody)
+                        }
+                    }
+                }
+                registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+            }
+            else if(call.method == "startExampleService" ) {
+                startService(Intent(this, SmsForegroundService::class.java))
+                result.success("Foreground Service Started!")
+                }
+           else if(call.method == "stopExampleService" ) {
+                stopService(Intent(this, SmsForegroundService::class.java))
+                result.success("Stopped!")
+            }
+            else {
                 result.notImplemented()
 
             }
         }
     }
 
-
-
+// ...............................*..................*...........................*.....................*
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    fun sendSms(phoneNumber: String, message: String) {
+   private fun sendSms(phoneNumber: String, message: String) {
 
 //        val number: String = phoneNumber
 //        val msg: String = message

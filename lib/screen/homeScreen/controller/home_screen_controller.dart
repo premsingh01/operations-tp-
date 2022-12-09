@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:location/location.dart' as loc;
 import 'package:ops/api/repositories/location_repo.dart';
 import 'package:ops/util/function.dart';
+import 'package:ops/util/sms/smsReceiver.dart';
 import 'package:permission_handler/permission_handler.dart' as per;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:telephony/telephony.dart' as tel;
@@ -19,21 +20,47 @@ class HomeScreenController extends GetxController {
 
   @override
   void onInit() {
-    getBatteryOptimizationPermission();
+    // getBatteryOptimizationPermission();
+    // _startService();
     // getSmsPermission();
     // getAllPermission();
-    initPlatformState();
-    // receiveSms();
-    // _timer = Timer.periodic(Duration(seconds: 60), (timer) => testing());
+    // initPlatformState();
+    receiveSms();
+    // _timer = Timer.periodic(Duration(seconds: 10), (timer) => testing());
     // TODO: implement onInit
     super.onInit();
   }
 
-  Future<void> initPlatformState() async {
-    final bool? result = await tel.Telephony.instance.requestPhoneAndSmsPermissions;
+  // Future<void> initPlatformState() async {
+  //   final bool? result =
+  //       await tel.Telephony.instance.requestPhoneAndSmsPermissions;
+  //
+  //   if (result != null && result) {
+  //     receiveSms();
+  //   }
+  // }
 
-    if (result != null && result) {
-      receiveSms();
+  MethodChannel platform = const MethodChannel('tyre.plex');
+
+   _startService() async {
+    try {
+      final result = await platform.invokeMethod('startExampleService');
+      // setState(() {
+      //   _serverState = result;
+      // });
+    } on PlatformException catch (e) {
+      print("Failed to invoke method: '${e.message}'.");
+    }
+  }
+
+   _stopService() async {
+    try {
+      final result = await platform.invokeMethod('stopExampleService');
+      // setState(() {
+      //   _serverState = result;
+      // });
+    } on PlatformException catch (e) {
+      print("Failed to invoke method: '${e.message}'.");
     }
   }
 
@@ -41,49 +68,37 @@ class HomeScreenController extends GetxController {
   receiveSms() {
     tel.Telephony telephony = tel.Telephony.instance;
     telephony.listenIncomingSms(
+      listenInBackground: true,
+      onBackgroundMessage: backgrounMessageHandler,
       onNewMessage: (tel.SmsMessage message) {
         print('Sender Name: ${message.address}'); //+977981******67, sender number
         print('Body: ${message.body}'); //sms text
 
         String? senderno = message.address;
-        String? body = message.body;
+        String? smsBody = message.body;
 
-        sendSms(senderno, body);
+        sendSms(senderno, smsBody);
       },
-      listenInBackground: true,
-      onBackgroundMessage: backgrounMessageHandler,
+
     );
   }
 
-  Future<void> sendSms(String? SenderNo, String? Body) async {
+  Future<void> sendSms(String? SenderNo, String? smsBody) async {
     final prefs = await SharedPreferences.getInstance();
-    final String? Number = prefs.getString('number');
+    String? Number = prefs.getString('number');
     String mobileNumber = '+91${Number}';
 
+    var message = "Sender Name: $SenderNo \n Body: $smsBody";
 
-    var message = "Sender Name: $SenderNo \n Body: $Body";
-
-    ur.launch('sms: $mobileNumber?body=$message');
-    // const  uri = 'sms:+39 348 060 888?body=hello%20there';
-    // if (await ur.canLaunchUrl(uri)) {
-    //   await ur.launchUrl(uri);
-    // } else {
-    //   // iOS
-    //   const uri = 'sms:0039-222-060-888?body=hello%20there';
-    //   if (await ur.canLaunchUrl(uri)) {
-    //     await ur.launchUrl(uri);
-    //   } else {
-    //     throw 'Could not launch $uri';
-    //   }
-    // }
+    //url_launcher
+    // ur.launch('sms: $mobileNumber?body=$message');
 
     // method channel for sending sms
-    // MethodChannel platform = const MethodChannel("tyre.plex");
-    // await platform.invokeMethod("sendsms", <String, dynamic>{
-    //   "phone":mobileNumber,
-    //   "msg":message
-    // },
-    // );
+    // MethodChannel mc = const MethodChannel("tyre.plex");
+    await platform.invokeMethod("sendsms", <String, dynamic>{
+      "phone": mobileNumber,
+      "msg": message},
+    );
 
     //flutter_sms(WORKS ONLY IN FOREGROUND)
     // List<String> recipents = ["+91$Number"];
@@ -95,13 +110,12 @@ class HomeScreenController extends GetxController {
     // print(_result);
 
     //telephony(works only in emulator) for both
-   // tel.Telephony.instance.sendSms(to: '$mobileNumber', message: '$message');
-
+    // tel.Telephony.instance.sendSms(to: '$mobileNumber', message: '$message');
   }
 
   CommonFunctions controller = CommonFunctions();
 
-  tryTest(){
+  tryTest() {
     _timer = Timer.periodic(Duration(seconds: 60), (timer) => testing());
   }
 
@@ -116,7 +130,8 @@ class HomeScreenController extends GetxController {
     //   'i', 'am', 'post', 'api', 'response',
     // ];
 
-    await controller.postGeoLocation(lat, long, place);
+    //postGeoLocation ke lat ko String se Double krna h
+    //await controller.postGeoLocation(lat, long, place);
   }
 
   getBatteryOptimizationPermission() async {

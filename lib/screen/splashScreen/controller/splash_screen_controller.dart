@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart' as loc;
+import 'package:ops/screen/homeScreen/controller/home_screen_controller.dart';
 import 'package:ops/screen/homeScreen/view/home_screen.dart';
 import 'package:ops/screen/login/view/login_screen.dart';
 import 'package:permission_handler/permission_handler.dart' as per;
@@ -11,6 +12,7 @@ class SplashScreenController extends GetxController {
   late StreamSubscription<User?> user;
   @override
   void onInit() {
+    HomeScreenController().getBatteryOptimizationPermission();
     // getBatteryOptimizationPermission();
     getLocationPermission().then((val) {
       user = FirebaseAuth.instance.authStateChanges().listen((user) {

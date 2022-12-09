@@ -40,8 +40,8 @@ class CommonFunctions {
 
     return LocationAndAddress(_latitude, _longitude, placemark);
   }
-
-  postGeoLocation(double latitude, double longitude, List placemark) async {
+ //string ko double me change krna h
+  postGeoLocation(String latitude, double longitude, List placemark) async {
     var dio = Dio();
     try {
       var response = await dio.post('https://fakestoreapi.com/products', data: {
@@ -49,6 +49,8 @@ class CommonFunctions {
         "long": longitude,
         "address": placemark,
       });
+      print(response.data);
+      print(response.requestOptions.data);
     } on Exception catch (e) {
       Future.error(e);
     }
