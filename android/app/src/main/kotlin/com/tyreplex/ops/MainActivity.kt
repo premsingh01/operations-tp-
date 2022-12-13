@@ -27,11 +27,6 @@ class MainActivity : FlutterActivity() {
      val MCHANNEL = "tyre.plex"
     val ECHANNEL = "tyre.plex.sms.receiver"
 
-    Intent smsServiceIntent;
-    which is initialized in onCreate() like this:
-
-    smsServiceIntent = new Intent(MainAct.this, SmsProcessService.class);
-
 
 // ...............................*..................*...........................*.....................*
 //     GeneratedPluginRegistrant.registerWith(flutterEngine)
@@ -87,7 +82,7 @@ class MainActivity : FlutterActivity() {
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
         eventSink = events
     }
-.
+
     override fun onCancel(arguments: Any?) {
         eventSink = null
     }
@@ -100,54 +95,6 @@ class MainActivity : FlutterActivity() {
         }
     }
 }
-
-
-    class SmsProcessService : Service() {
-//        var smsReceiver: SmsReceiver = SmsReceiver()
-//        @Nullable
-//        fun onBind(intent: Intent?): IBinder? {
-//            return null
-//        }
-//
-//        fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//            registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
-//            return START_STICKY
-//        }
-//
-//        private inner class SmsReceiver : BroadcastReceiver() {
-//            fun onReceive(context: Context?, intent: Intent) {
-//                var telnr = ""
-//                var nachricht = ""
-//                val extras: Bundle = intent.getExtras()
-//                if (extras != null) {
-//                    val pdus = extras.get("pdus") as Array<Any>
-//                    if (pdus != null) {
-//                        for (pdu in pdus) {
-//                            val smsMessage: SmsMessage = getIncomingMessage(pdu, extras)
-//                            telnr = smsMessage.getDisplayOriginatingAddress()
-//                            nachricht += smsMessage.getDisplayMessageBody()
-//                        }
-//
-//                        // Here the message content is processed within MainAct
-//                        MainAct.instance()
-//                            .processSMS(telnr.replace("+49", "0").replace(" ", ""), nachricht)
-//                    }
-//                }
-//            }
-//
-//            private fun getIncomingMessage(`object`: Any, bundle: Bundle): SmsMessage {
-//                val smsMessage: SmsMessage
-//                smsMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    val format: String = bundle.getString("format")
-//                    SmsMessage.createFromPdu(`object` as ByteArray, format)
-//                } else {
-//                    SmsMessage.createFromPdu(`object` as ByteArray)
-//                }
-//                return smsMessage
-//            }
-//        }
-//    }
-
 
 
 // ...............................*..................*...........................*.....................*
