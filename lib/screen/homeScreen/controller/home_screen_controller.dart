@@ -25,7 +25,7 @@ class HomeScreenController extends GetxController {
     // getSmsPermission();
     // getAllPermission();
     // initPlatformState();
-    receiveSms();
+    //  receiveSms();
     // _timer = Timer.periodic(Duration(seconds: 10), (timer) => testing());
     // TODO: implement onInit
     super.onInit();
@@ -65,40 +65,42 @@ class HomeScreenController extends GetxController {
   }
 
   //receiving device messages on app
-  receiveSms() {
-    tel.Telephony telephony = tel.Telephony.instance;
-    telephony.listenIncomingSms(
-      listenInBackground: true,
-      onBackgroundMessage: backgrounMessageHandler,
-      onNewMessage: (tel.SmsMessage message) {
-        print('Sender Name: ${message.address}'); //+977981******67, sender number
-        print('Body: ${message.body}'); //sms text
-
-        String? senderno = message.address;
-        String? smsBody = message.body;
-
-        sendSms(senderno, smsBody);
-      },
-
-    );
-  }
+  // receiveSms() {
+  //   tel.Telephony telephony = tel.Telephony.instance;
+  //   telephony.listenIncomingSms(
+  //     listenInBackground: true,
+  //     onBackgroundMessage: backgrounMessageHandler,
+  //     onNewMessage: (tel.SmsMessage message) {
+  //       print('Sender Name: ${message.address}'); //+977981******67, sender number
+  //       print('Body: ${message.body}'); //sms text
+  //
+  //       String? senderno = message.address;
+  //       String? smsBody = message.body;
+  //
+  //       sendSms(senderno, smsBody);
+  //     },
+  //
+  //   );
+  // }
 
   Future<void> sendSms(String? SenderNo, String? smsBody) async {
+     print('HomeScreen controller send sms working');
     final prefs = await SharedPreferences.getInstance();
     String? Number = prefs.getString('number');
-    String mobileNumber = '+91${Number}';
+    String mobileNumber = '+91$Number';
 
     var message = "Sender Name: $SenderNo \n Body: $smsBody";
-
+     print('HomeScreen controller send sms working after shared preference');
     //url_launcher
     // ur.launch('sms: $mobileNumber?body=$message');
 
     // method channel for sending sms
-    // MethodChannel mc = const MethodChannel("tyre.plex");
     await platform.invokeMethod("sendsms", <String, dynamic>{
       "phone": mobileNumber,
-      "msg": message},
+      "msg": message,
+    }
     );
+     print('HomeScreen controller after sending Sms');
 
     //flutter_sms(WORKS ONLY IN FOREGROUND)
     // List<String> recipents = ["+91$Number"];

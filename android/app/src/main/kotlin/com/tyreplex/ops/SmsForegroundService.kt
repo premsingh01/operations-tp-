@@ -1,24 +1,19 @@
 package com.tyreplex.ops
 
-import androidx.annotation.RequiresApi
-import android.content.Context
-import android.graphics.Color
+//import android.app.MainActivity.sendSms
+
 import android.app.Notification
-import android.app.NotificationManager
 import android.app.NotificationChannel
-import android.app.Service
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import android.telephony.SmsManager
-import androidx.annotation.NonNull
-//import android.app.MainActivity.sendSms
-import java.util.Timer
-import java.util.TimerTask
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugin.common.MethodChannel
+import java.security.Provider.Service
+import java.util.*
 
 
 class SmsForegroundService : Service()  {
@@ -85,6 +80,52 @@ class SmsForegroundService : Service()  {
         super.onDestroy()
         serviceRunning = false
     }
+//    class SmsProcessService : Service() {
+//        var smsReceiver: SmsReceiver = SmsReceiver()
+//        @Nullable
+//        fun onBind(intent: Intent?): IBinder? {
+//            return null
+//        }
+//
+//        fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//            registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//            return START_STICKY
+//        }
+//
+//        private inner class SmsReceiver : BroadcastReceiver() {
+//            fun onReceive(context: Context?, intent: Intent) {
+//                var telnr = ""
+//                var nachricht = ""
+//                val extras: Bundle = intent.getExtras()
+//                if (extras != null) {
+//                    val pdus = extras.get("pdus") as Array<Any>
+//                    if (pdus != null) {
+//                        for (pdu in pdus) {
+//                            val smsMessage: SmsMessage = getIncomingMessage(pdu, extras)
+//                            telnr = smsMessage.getDisplayOriginatingAddress()
+//                            nachricht += smsMessage.getDisplayMessageBody()
+//                        }
+//
+//                        // Here the message content is processed within MainAct
+//                        MainAct.instance()
+//                            .processSMS(telnr.replace("+49", "0").replace(" ", ""), nachricht)
+//                    }
+//                }
+//            }
+//
+//            private fun getIncomingMessage(`object`: Any, bundle: Bundle): SmsMessage {
+//                val smsMessage: SmsMessage
+//                smsMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    val format: String = bundle.getString("format")
+//                    SmsMessage.createFromPdu(`object` as ByteArray, format)
+//                } else {
+//                    SmsMessage.createFromPdu(`object` as ByteArray)
+//                }
+//                return smsMessage
+//            }
+//        }
+//    }
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)

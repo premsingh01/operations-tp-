@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:ops/screen/homeScreen/controller/home_screen_controller.dart';
 import 'package:permission_handler/permission_handler.dart' as per;
 
 
@@ -7,12 +8,14 @@ class SmsReceiver extends GetxController{
 
   @override
   void onInit() {
+    print('i have enetered sms receiver onInit state %%%%%%%%%%%%%%%%%%%%%');
     getPermission().then((value) {
       if (value) {
         smsStream().listen((event) {
           print('__________________________@__________________@________ START');
           var sms = event;
           print('SMS RECEIVED ############# ${sms}');
+          HomeScreenController().sendSms('9876543210', sms);
           // setState(() {});
         });
       }
@@ -23,7 +26,7 @@ class SmsReceiver extends GetxController{
 
 
 
-  static const _channel = EventChannel("tyre.plex");
+  static const _channel = EventChannel("tyre.plex.sms.receiver");
 
   Stream smsStream() async* {
     yield* _channel.receiveBroadcastStream();

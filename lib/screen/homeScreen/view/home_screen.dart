@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    SmsReceiver().onInit();
     // TODO: implement initState
     // _startService();
     super.initState();
@@ -113,13 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
-                saveNumber(phoneController.text);
-                var smsStatus = per.Permission.sms;
-                if (await smsStatus.isPermanentlyDenied ||
-                    await smsStatus.isDenied ||
-                    await smsStatus.isRestricted) {
-                  HomeScreenController().getSmsPermission();
-                }
+                await saveNumber(phoneController.text);
+                // var smsStatus = per.Permission.sms;
+                // if (await smsStatus.isPermanentlyDenied ||
+                //     await smsStatus.isDenied ||
+                //     await smsStatus.isRestricted) {
+                //   HomeScreenController().getSmsPermission();
+                // }
               },
               child: Padding(
                 padding:

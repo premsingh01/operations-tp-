@@ -24,39 +24,21 @@ import android.content.IntentFilter
 
 class MainActivity : FlutterActivity() {
 
-     val CHANNEL = "tyre.plex"
+     val MCHANNEL = "tyre.plex"
+    val ECHANNEL = "tyre.plex.sms.receiver"
 
-//    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-//        super.configureFlutterEngine(flutterEngine)
-//        val smsReceiver = object : EventChannel.StreamHandler, BroadcastReceiver() {
-//            var eventSink: EventChannel.EventSink? = null
-//            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-//                eventSink = events
-//            }
-//
-//            override fun onCancel(arguments: Any?) {
-//                eventSink = null
-//            }
-//
-//            override fun onReceive(p0: Context?, p1: Intent?) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                    for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
-//                        eventSink?.success(sms.displayMessageBody)
-//                    }
-//                }
-//            }
-//        }
-//        registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
-//        EventChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
-//            .setStreamHandler(smsReceiver)
-//    }
+    Intent smsServiceIntent;
+    which is initialized in onCreate() like this:
+
+    smsServiceIntent = new Intent(MainAct.this, SmsProcessService.class);
+
 
 // ...............................*..................*...........................*.....................*
 //     GeneratedPluginRegistrant.registerWith(flutterEngine)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-                call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, MCHANNEL)
+            .setMethodCallHandler { call, result ->
             if(call.method == "sendsms") {
                 val phone = call.argument<String>("phone")
                 val msg = call.argument<String>("msg")
@@ -64,16 +46,16 @@ class MainActivity : FlutterActivity() {
                         sendSms(phone, msg)
                 }
             }
-            else if(call.method == "receive_sms"){
-                val smsReceiver = object: BroadcastReceiver(){
-                    override fun onReceive(p0: Context?, p1: Intent?) {
-                        for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
-                            result.success(sms.displayMessageBody)
-                        }
-                    }
-                }
-                registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
-            }
+//            else if(call.method == "receive_sms"){
+//                val smsReceiver = object: BroadcastReceiver(){
+//                    override fun onReceive(p0: Context?, p1: Intent?) {
+//                        for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
+//                            result.success(sms.displayMessageBody)
+//                        }
+//                    }
+//                }
+//                registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//            }
             else if(call.method == "startExampleService" ) {
                 startService(Intent(this, SmsForegroundService::class.java))
                 result.success("Foreground Service Started!")
@@ -87,16 +69,92 @@ class MainActivity : FlutterActivity() {
 
             }
         }
+
+    registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+    EventChannel(flutterEngine.dartExecutor.binaryMessenger, ECHANNEL)
+        .setStreamHandler(smsReceiver)
+
+
+
     }
+
+
+
+// ...............................*..................*...........................*.....................*
+
+ private val smsReceiver = object : EventChannel.StreamHandler, BroadcastReceiver() {
+    var eventSink: EventChannel.EventSink? = null
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        eventSink = events
+    }
+.
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
+    }
+
+    override fun onReceive(p0: Context?, p1: Intent?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
+                eventSink?.success(sms.displayMessageBody)
+            }
+        }
+    }
+}
+
+
+    class SmsProcessService : Service() {
+//        var smsReceiver: SmsReceiver = SmsReceiver()
+//        @Nullable
+//        fun onBind(intent: Intent?): IBinder? {
+//            return null
+//        }
+//
+//        fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//            registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//            return START_STICKY
+//        }
+//
+//        private inner class SmsReceiver : BroadcastReceiver() {
+//            fun onReceive(context: Context?, intent: Intent) {
+//                var telnr = ""
+//                var nachricht = ""
+//                val extras: Bundle = intent.getExtras()
+//                if (extras != null) {
+//                    val pdus = extras.get("pdus") as Array<Any>
+//                    if (pdus != null) {
+//                        for (pdu in pdus) {
+//                            val smsMessage: SmsMessage = getIncomingMessage(pdu, extras)
+//                            telnr = smsMessage.getDisplayOriginatingAddress()
+//                            nachricht += smsMessage.getDisplayMessageBody()
+//                        }
+//
+//                        // Here the message content is processed within MainAct
+//                        MainAct.instance()
+//                            .processSMS(telnr.replace("+49", "0").replace(" ", ""), nachricht)
+//                    }
+//                }
+//            }
+//
+//            private fun getIncomingMessage(`object`: Any, bundle: Bundle): SmsMessage {
+//                val smsMessage: SmsMessage
+//                smsMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    val format: String = bundle.getString("format")
+//                    SmsMessage.createFromPdu(`object` as ByteArray, format)
+//                } else {
+//                    SmsMessage.createFromPdu(`object` as ByteArray)
+//                }
+//                return smsMessage
+//            }
+//        }
+//    }
+
+
 
 // ...............................*..................*...........................*.....................*
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
    private fun sendSms(phoneNumber: String, message: String) {
-
-//        val number: String = phoneNumber
-//        val msg: String = message
         try {
 //            val smsManager = getSmsManager()
             val smsManager = SmsManager.getDefault()
@@ -108,6 +166,10 @@ class MainActivity : FlutterActivity() {
         }
 
     }
+
+
+// ...............................*..................*...........................*.....................*
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,6 +199,7 @@ class MainActivity : FlutterActivity() {
         }
 
     }
+// ...............................*..................*...........................*.....................*
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
@@ -160,7 +223,7 @@ class MainActivity : FlutterActivity() {
     }
 
 
-
+// ...............................*..................*...........................*.....................*
 
 //    private fun getSmsManager(): SmsManager {
 //        val subscriptionId = SmsManager.getDefaultSmsSubscriptionId()
@@ -177,6 +240,7 @@ class MainActivity : FlutterActivity() {
 //        return smsManager
 //    }
 
+// ...............................*..................*...........................*.....................*
 
 //    private val CHANNEL = "tyre.plex"
 //
@@ -206,6 +270,36 @@ class MainActivity : FlutterActivity() {
 //        }
 //    }
 
+
+// ...............................*..................*...........................*.....................*
+
+
+    //    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+//        super.configureFlutterEngine(flutterEngine)
+//        val smsReceiver = object : EventChannel.StreamHandler, BroadcastReceiver() {
+//            var eventSink: EventChannel.EventSink? = null
+//            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+//                eventSink = events
+//            }
+//
+//            override fun onCancel(arguments: Any?) {
+//                eventSink = null
+//            }
+//
+//            override fun onReceive(p0: Context?, p1: Intent?) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                    for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
+//                        eventSink?.success(sms.displayMessageBody)
+//                    }
+//                }
+//            }
+//        }
+//        registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//        EventChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+//            .setStreamHandler(smsReceiver)
+//    }
+
+// ...............................*..................*...........................*.....................*
 
 }
 

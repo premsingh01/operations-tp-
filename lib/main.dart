@@ -40,47 +40,46 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 }
 
 //receiving background message
-backgrounMessageHandler(tel.SmsMessage message)  async {
-  print(
-      'backgound message handle ----Sender Name: ${message.address}'); //+977981******67, sender nubmer
-  print('backgound message handle ----Body: ${message.body}'); //sms text
-
-  String? Senderno = message.address; //sender number
-  print('i am senderNo. ${Senderno}');
-  String? Body = message.body;
-
-  final prefs = await SharedPreferences.getInstance();
-  String? savedNumber = prefs.getString('number');
-  String Message =
-      "Sender Name: ${message.address} \n Body: $Body"; //Sender number and Message body
-  String mobileNumber = '+91${savedNumber}';
-  print('odododododod Saved Number From MAIN.dart ${savedNumber}');
-
-  // CommonFunctions functionController = CommonFunctions();
-  List place = [
-    'i',
-    'am',
-    'post',
-    'api',
-    'response',
-    '$Message',
-  ];
-  double nu = 8888888;
-  await CommonFunctions().postGeoLocation(savedNumber ?? '', nu, place);
-  // await functionController.postGeoLocation(Number ??'', nu, place);
-  print("DATA SENT TO API");
-  // MethodChannel platform = const MethodChannel("tyre.plex");
-  // await platform.invokeMethod(
-  //   "sendsms",
-  //   <String, dynamic>{
-  //     "phone": mobileNumber,
-  //     "msg": Message,
-  //   },
-  // );
-
-  // tel.Telephony.backgroundInstance.sendSms(to: '$Number', message: '$Message');
-  //  HomeScreenController().sendSms(Senderno, Body);
-}
+// backgrounMessageHandler(tel.SmsMessage message)  async {
+//   print('backgound message handle ----Sender Name: ${message.address}'); //+977981******67, sender nubmer
+//   print('backgound message handle ----Body: ${message.body}'); //sms text
+//
+//   String? Senderno = message.address; //sender number
+//   print('i am senderNo. ${Senderno}');
+//   String? Body = message.body;
+//
+//   final prefs = await SharedPreferences.getInstance();
+//   await prefs.reload();
+//   String? savedNumber = prefs.getString('number');
+//   String Message = "Sender Name: ${message.address} \n Body: $Body"; //Sender number and Message body
+//   String mobileNumber = '+91${savedNumber}';
+//   print('odododododod Saved Number From MAIN.dart ${savedNumber}');
+//
+//   // CommonFunctions functionController = CommonFunctions();
+//   List place = [
+//     'i',
+//     'am',
+//     'post',
+//     'api',
+//     'response',
+//     '$Message',
+//   ];
+//   double nu = 8888888;
+//   // await CommonFunctions().postGeoLocation(savedNumber ?? '', nu, place);
+//   await HomeScreenController().sendSms(Senderno, Body);
+//   print("DATA SENT TO API");
+//   // MethodChannel platform = const MethodChannel("tyre.plex");
+//   // await platform.invokeMethod(
+//   //   "sendsms",
+//   //   <String, dynamic>{
+//   //     "phone": mobileNumber,
+//   //     "msg": Message,
+//   //   },
+//   // );
+//
+//   // tel.Telephony.backgroundInstance.sendSms(to: '$Number', message: '$Message');
+//   //  HomeScreenController().sendSms(Senderno, Body);
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
