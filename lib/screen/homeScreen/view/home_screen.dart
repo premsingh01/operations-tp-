@@ -25,6 +25,17 @@ class _HomeScreenState extends State<HomeScreen> {
     print(savedNumber);
   }
 
+  Future<void> _startSmsReceiver() async {
+    print('I am inside start sms receiver !!!!!!!!!!!!!!!!!!');
+    const platform = const MethodChannel('tyre.plex');
+    try {
+      final result = await platform.invokeMethod('startSmsReceiver');
+      print('i am start sms receiver result fo HOME &&&&&&&&& ${result}');
+    } on PlatformException catch (e) {
+      print("Failed to invoke method: '${e.message}'.");
+    }
+  }
+
   // static const platform = const MethodChannel('tyre.plex');
   Future<void> _startService() async {
     const platform = const MethodChannel('tyre.plex');
@@ -52,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    SmsReceiver().onInit();
+    // SmsReceiver().onInit();///////////////////////////////////////////// /////////////
     // TODO: implement initState
     // _startService();
     super.initState();
@@ -88,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 cursorColor: Colors.black,
                 keyboardType: TextInputType.phone,
                 maxLength: 10,
+                autofocus: true,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -173,6 +185,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
                 child: Text(
                   'Cancel Foreground Service',
+                  style: TextStyle(
+                    letterSpacing: 1,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                elevation: 0,
+              ),
+            ),
+            SizedBox(height: 5.h,),
+
+            ElevatedButton(
+              onPressed: () async {
+                _startSmsReceiver();
+              },
+              child: Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
+                child: Text(
+                  'Start Sms Receiver',
                   style: TextStyle(
                     letterSpacing: 1,
                     fontSize: 16,

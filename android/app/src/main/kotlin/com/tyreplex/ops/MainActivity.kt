@@ -1,25 +1,23 @@
 package com.tyreplex.ops
 
 import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import android.annotation.TargetApi
-import android.os.Bundle
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
-import android.telephony.SmsManager
-import android.provider.Telephony
-import androidx.annotation.NonNull
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant
-import io.flutter.plugin.common.BinaryMessenger
-import io.flutter.plugin.common.EventChannel
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import android.os.Bundle
+import android.provider.Telephony
+import android.telephony.SmsManager
+import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 
 
 class MainActivity : FlutterActivity() {
@@ -59,6 +57,11 @@ class MainActivity : FlutterActivity() {
                 stopService(Intent(this, SmsForegroundService::class.java))
                 result.success("Stopped!")
             }
+            else if(call.method == "startSmsReceiver" ) {
+
+                var received = startService(Intent(this,  Sms::class.java))
+                result.success(received)
+            }
             else {
                 result.notImplemented()
 
@@ -73,6 +76,35 @@ class MainActivity : FlutterActivity() {
 
     }
 
+//    class IncomingSmsBroadcastReceiver : BroadcastReceiver() {
+//        fun onReceive(context: Context?, intent: Intent?) {
+//            if (intent != null && SMS_RECEIVED == intent.getAction()) {
+//                val smsMessage: SmsMessage = extractSmsMessage(intent)
+//                processMessage(context, smsMessage)
+//            }
+//        }
+//
+//        private fun extractSmsMessage(intent: Intent): SmsMessage {
+//            val pudsBundle: Bundle = intent.getExtras()
+//            val pdus = pudsBundle.get("pdus") as Array<Any>
+//            return SmsMessage.createFromPdu(pdus[0] as ByteArray)
+//        }
+//
+//        companion object {
+//            private const val SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
+//        }
+//    }
+//
+//    private fun processMessage(context: Context, smsMessage: SmsMessage) {
+//
+//        //here send back result, like this
+//        if (smsMessage.getMessageBody() != null) {
+//            result.success(smsMessage.getMessageBody())
+//        } else {
+//            result.error("Error", "Sms not found", null)
+//        }
+//    }
+
 
 
 // ...............................*..................*...........................*.....................*
@@ -80,6 +112,7 @@ class MainActivity : FlutterActivity() {
  private val smsReceiver = object : EventChannel.StreamHandler, BroadcastReceiver() {
     var eventSink: EventChannel.EventSink? = null
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        registerReceiver(this, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
         eventSink = events
     }
 

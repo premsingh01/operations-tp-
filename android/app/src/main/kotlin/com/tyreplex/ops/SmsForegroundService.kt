@@ -1,27 +1,33 @@
 package com.tyreplex.ops
 
 import androidx.annotation.RequiresApi
-import android.content.Context
 import android.graphics.Color
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.app.Service
-import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import android.telephony.SmsManager
 import androidx.annotation.NonNull
-//import android.app.MainActivity.sendSms
 import java.util.Timer
 import java.util.TimerTask
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.EventChannel
+import android.provider.Telephony
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 
 
 class SmsForegroundService : Service()  {
+
+
+    val ECHANNEL = "tyre.plex.foreground.sms.receiver"
 
 //    val CHANNEL = "tyre.plex.foreground"
 //
@@ -42,7 +48,35 @@ class SmsForegroundService : Service()  {
 //        }
 //    }
 
-    override fun onCreate() {
+//    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+//        super.configureFlutterEngine(flutterEngine)
+//    registerReceiver(smsReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//    EventChannel(flutterEngine.dartExecutor.binaryMessenger, ECHANNEL)
+//    .setStreamHandler(smsReceiver)
+//
+//
+//         val smsReceiver = object : EventChannel.StreamHandler, BroadcastReceiver() {
+//            var eventSink: EventChannel.EventSink? = null
+//            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+//                eventSink = events
+//            }
+//
+//            override fun onCancel(arguments: Any?) {
+//                eventSink = null
+//            }
+//
+//            override fun onReceive(p0: Context?, p1: Intent?) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                    for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
+//                        eventSink?.success(sms.displayMessageBody)
+//                    }
+//                }
+//            }
+//        }
+
+
+
+        override fun onCreate() {
         super.onCreate()
         startForeground()
         serviceRunning = true
