@@ -36,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // static const platform = const MethodChannel('tyre.plex');
   Future<void> _startService() async {
     const platform = const MethodChannel('tyre.plex');
     try {
@@ -64,17 +63,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    // SmsReceiver().initReceiver(); ///////////////////////////////////////////////// ////////////////
-    // _startService();
     super.initState();
   }
+  @override
+  void dispose() {
+    homeController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
 
+  // static const platform = const MethodChannel('tyre.plex');
+  HomeScreenController homeController = Get.put(HomeScreenController());
+  TextEditingController phoneController = TextEditingController();
+  final prefs = SharedPreferences.getInstance();
   @override
   Widget build(BuildContext context) {
-    HomeScreenController homeController = Get.put(HomeScreenController());
-     // SmsReceiver smsReceiver = Get.put(SmsReceiver());
-    TextEditingController phoneController = TextEditingController();
-    final prefs = SharedPreferences.getInstance();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -127,12 +130,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () async {
                 await saveNumber(phoneController.text);
-                // var smsStatus = per.Permission.sms;
-                // if (await smsStatus.isPermanentlyDenied ||
-                //     await smsStatus.isDenied ||
-                //     await smsStatus.isRestricted) {
-                //   HomeScreenController().getSmsPermission();
-                // }
               },
               child: Padding(
                 padding:
@@ -185,28 +182,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
                 child: Text(
                   'Cancel Foreground Service',
-                  style: TextStyle(
-                    letterSpacing: 1,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                elevation: 0,
-              ),
-            ),
-            SizedBox(height: 5.h,),
-
-            ElevatedButton(
-              onPressed: () async {
-                _startSmsReceiver();
-              },
-              child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 30, vertical: 13),
-                child: Text(
-                  'Start Sms Receiver',
                   style: TextStyle(
                     letterSpacing: 1,
                     fontSize: 16,

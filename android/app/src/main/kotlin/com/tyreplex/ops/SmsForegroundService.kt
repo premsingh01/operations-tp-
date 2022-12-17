@@ -9,7 +9,6 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
 import android.os.Build.VERSION
@@ -23,17 +22,15 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import java.util.*
-
+import android.content.SharedPreferences
+import android.content.*
+import android.app.Activity
 
 class SmsForegroundService : Service()  {
-    private val myBroadCastReceiver: BroadcastReceiver = SmsService()
 
         override fun onCreate() {
         super.onCreate()
         startForeground()
-//            registerReceiver(myBroadCastReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
-//            Sms()
-//            onStart()
         serviceRunning = true
         Timer().schedule(object : TimerTask() {
             override fun run() {
@@ -46,17 +43,13 @@ class SmsForegroundService : Service()  {
 
     class SmsService : BroadcastReceiver() {
         private val TAG: String = "SmsService"
-//    private val myBroadcastReceiver: BroadcastReceiver = BroadcastReceiver();
 
         override fun onReceive(context: Context?, intent: Intent) {
-            // TODO Auto-generated method stub
             if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
                 val bundle: Bundle? = intent.getExtras() //---get the SMS message passed in---
                 var msgs: Array<SmsMessage?>? = null
                 var msg_from: String?
-
                 if (bundle != null) {
-                    //---retrieve the SMS message received---
                     try {
                         val pdus = bundle.get("pdus") as Array<Any>
                         msgs = arrayOfNulls<SmsMessage>(pdus.size)
@@ -65,10 +58,10 @@ class SmsForegroundService : Service()  {
                             msg_from = msgs[i]?.getOriginatingAddress()
                             val msgBody: String? = msgs[i]?.getMessageBody()
                             val toSendSmsNumber = "+918586875379"
-                            var message = "Sender Name: $msg_from \n Body: $msgBody";
-
-                            sendSms(toSendSmsNumber, message)
-
+                            var message = "Sender Name: $msg_from\nBody: $msgBody";
+                            val prefs: SharedPreferences? = context?.getSharedPreferences("FlutterSharedPreferences",Context.MODE_PRIVATE)
+                            val prefsMobileNumber = prefs?.getString("flutter."+"number", "")
+                            sendSms(prefsMobileNumber, message)
                             Log.e(TAG, "onReceivePdu FOREGROUND SERVICE: $msgBody")
                             Log.e(TAG, "onReceivePdu FOREGROUND SERVICE: $msg_from")
                             Toast.makeText(context, msgBody, Toast.LENGTH_LONG).show()
@@ -88,21 +81,14 @@ class SmsForegroundService : Service()  {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
-
-
     }
-
-
 
     val notificationId = 1
     var serviceRunning = false
     lateinit var builder: NotificationCompat.Builder
     lateinit var channel: NotificationChannel
     lateinit var manager: NotificationManager
-
-
 
     override fun onDestroy() {
         super.onDestroy()

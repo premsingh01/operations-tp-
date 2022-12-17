@@ -16,29 +16,18 @@ import '../../../main.dart';
 
 class HomeScreenController extends GetxController {
   Timer? _timer;
-  // String sms = "";
 
   @override
   void onInit() {
     // getBatteryOptimizationPermission();
     // _startService();
     // getSmsPermission();
-    // getAllPermission();
     // initPlatformState();
     //  receiveSms();
     // _timer = Timer.periodic(Duration(seconds: 10), (timer) => testing());
     // TODO: implement onInit
     super.onInit();
   }
-
-  // Future<void> initPlatformState() async {
-  //   final bool? result =
-  //       await tel.Telephony.instance.requestPhoneAndSmsPermissions;
-  //
-  //   if (result != null && result) {
-  //     receiveSms();
-  //   }
-  // }
 
   MethodChannel platform = const MethodChannel('tyre.plex');
 
@@ -147,20 +136,6 @@ class HomeScreenController extends GetxController {
     per.Permission.ignoreBatteryOptimizations.isGranted;
 
     return;
-  }
-
-  getAllPermission() async {
-    Map<per.Permission, per.PermissionStatus> statuses = await [
-      per.Permission.ignoreBatteryOptimizations,
-      per.Permission.sms
-    ].request();
-
-    if ((statuses[per.Permission.location]?.isDenied) ?? false) {
-      print('location refused');
-    }
-    if ((statuses[per.Permission.sms]?.isDenied) ?? false) {
-      print('sms refused');
-    }
   }
 
   getSmsPermission() async {
