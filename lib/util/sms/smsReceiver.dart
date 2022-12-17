@@ -3,10 +3,8 @@ import 'package:get/get.dart';
 import 'package:ops/screen/homeScreen/controller/home_screen_controller.dart';
 import 'package:permission_handler/permission_handler.dart' as per;
 
-
 class SmsReceiver {
-
-  void initReceiver(){
+  void initReceiver() {
     getPermission().then((value) {
       if (value) {
         smsStream().listen((event) {
@@ -14,13 +12,10 @@ class SmsReceiver {
           // var sms = event;
           // print('SMS RECEIVED ############# ${sms}');
           // HomeScreenController().sendSms('9876543210', sms);
-          // setState(() {});
         });
       }
     });
   }
-
-
 
   static const _channel = EventChannel("tyre.plex.sms.receiver");
 
@@ -39,18 +34,4 @@ class SmsReceiver {
       }
     }
   }
-
-  // Future<String> sms() async {
-  //
-  //   // try {
-  //   //   final result = await _channel..invokeMethod("receive_sms");
-  //   //   return result as String;
-  //   // } catch (e) {
-  //   //   log(e.toString());
-  //   //   return "";
-  //   // }
-  // }
-
-
 }
-

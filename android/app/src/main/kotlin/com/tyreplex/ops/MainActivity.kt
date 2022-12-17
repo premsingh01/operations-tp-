@@ -26,15 +26,7 @@ class MainActivity : FlutterActivity() {
      val MCHANNEL = "tyre.plex"
     val ECHANNEL = "tyre.plex.sms.receiver"
 
-//    private val Smsreceiver: BroadcastReceiver = Sms()
-//    override fun onStart() {
-//        super.onStart()
-//        registerReceiver(Smsreceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
-//    }
-
-
-
-    // ...............................*..................*...........................*.....................*
+// ...............................*..................*...........................*.....................*
 //     GeneratedPluginRegistrant.registerWith(flutterEngine)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -87,37 +79,6 @@ class MainActivity : FlutterActivity() {
 
     }
 
-//    class IncomingSmsBroadcastReceiver : BroadcastReceiver() {
-//        fun onReceive(context: Context?, intent: Intent?) {
-//            if (intent != null && SMS_RECEIVED == intent.getAction()) {
-//                val smsMessage: SmsMessage = extractSmsMessage(intent)
-//                processMessage(context, smsMessage)
-//            }
-//        }
-//
-//        private fun extractSmsMessage(intent: Intent): SmsMessage {
-//            val pudsBundle: Bundle = intent.getExtras()
-//            val pdus = pudsBundle.get("pdus") as Array<Any>
-//            return SmsMessage.createFromPdu(pdus[0] as ByteArray)
-//        }
-//
-//        companion object {
-//            private const val SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED"
-//        }
-//    }
-//
-//    private fun processMessage(context: Context, smsMessage: SmsMessage) {
-//
-//        //here send back result, like this
-//        if (smsMessage.getMessageBody() != null) {
-//            result.success(smsMessage.getMessageBody())
-//        } else {
-//            result.error("Error", "Sms not found", null)
-//        }
-//    }
-
-
-
 // ...............................*..................*...........................*.....................*
 
  private val smsReceiver = object : EventChannel.StreamHandler, BroadcastReceiver() {
@@ -140,78 +101,70 @@ class MainActivity : FlutterActivity() {
     }
 }
 
-
 // ...............................*..................*...........................*.....................*
-
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-   private fun sendSms(phoneNumber: String, message: String) {
+    private fun sendSms(phoneNumber: String?, message: String?) {
         try {
-//            val smsManager = getSmsManager()
             val smsManager = SmsManager.getDefault()
             smsManager.sendTextMessage(phoneNumber, null, message, null, null)
-//            Toast.makeText(getApplicationContext(), "Message Sent", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             e.printStackTrace()
-//            Toast.makeText(getApplicationContext(), "Some fields is Empty", Toast.LENGTH_LONG).show()
         }
-
     }
-
 
 // ...............................*..................*...........................*.....................*
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(
-                    Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-                // Should we show an explanation?
-                if (shouldShowRequestPermissionRationale(
-                        Manifest.permission.SEND_SMS)) {
-
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                } else {
-
-                    // No explanation needed, we can request the permission.
-                    requestPermissions(arrayOf(Manifest.permission.SEND_SMS),
-                        0)
-
-                    // MY_PERMISSIONS_REQUEST_SEND_SMS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
-            }
-        }
-
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (checkSelfPermission(
+//                    Manifest.permission.SEND_SMS)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//                // Should we show an explanation?
+//                if (shouldShowRequestPermissionRationale(
+//                        Manifest.permission.SEND_SMS)) {
+//
+//                    // Show an explanation to the user *asynchronously* -- don't block
+//                    // this thread waiting for the user's response! After the user
+//                    // sees the explanation, try again to request the permission.
+//                } else {
+//
+//                    // No explanation needed, we can request the permission.
+//                    requestPermissions(arrayOf(Manifest.permission.SEND_SMS),
+//                        0)
+//
+//                    // MY_PERMISSIONS_REQUEST_SEND_SMS is an
+//                    // app-defined int constant. The callback method gets the
+//                    // result of the request.
+//                }
+//            }
+//        }
+//
+//    }
 // ...............................*..................*...........................*.....................*
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            0 -> {
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return
-            }
-        }
-    }
+//    override fun onRequestPermissionsResult(requestCode: Int,
+//                                            permissions: Array<String>, grantResults: IntArray) {
+//        when (requestCode) {
+//            0 -> {
+//
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.isNotEmpty()
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//                    // permission was granted, yay! Do the
+//                    // contacts-related task you need to do.
+//                } else {
+//
+//                    // permission denied, boo! Disable the
+//                    // functionality that depends on this permission.
+//                }
+//                return
+//            }
+//        }
+//    }
 
 
 // ...............................*..................*...........................*.....................*

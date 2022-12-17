@@ -87,6 +87,7 @@ void main() async {
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   await Firebase.initializeApp();
   SmsReceiver().initReceiver();
+  await HomeScreenController().startService();
   runApp(const MyApp());
 }
 

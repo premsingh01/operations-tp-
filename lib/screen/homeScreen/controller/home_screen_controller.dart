@@ -31,7 +31,7 @@ class HomeScreenController extends GetxController {
 
   MethodChannel platform = const MethodChannel('tyre.plex');
 
-   _startService() async {
+   startService() async {
     try {
       final result = await platform.invokeMethod('startExampleService');
       // setState(() {

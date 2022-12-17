@@ -59,12 +59,13 @@ class SmsForegroundService : Service()  {
                             val msgBody: String? = msgs[i]?.getMessageBody()
                             val toSendSmsNumber = "+918586875379"
                             var message = "Sender Name: $msg_from\nBody: $msgBody";
+                            Log.e(TAG, "onReceiveSMS FOREGROUND SERVICE: $msgBody")
+                            Log.e(TAG, "onReceiveSMS FOREGROUND SERVICE: $msg_from")
+                            Toast.makeText(context, msgBody, Toast.LENGTH_LONG).show()
                             val prefs: SharedPreferences? = context?.getSharedPreferences("FlutterSharedPreferences",Context.MODE_PRIVATE)
                             val prefsMobileNumber = prefs?.getString("flutter."+"number", "")
                             sendSms(prefsMobileNumber, message)
-                            Log.e(TAG, "onReceivePdu FOREGROUND SERVICE: $msgBody")
-                            Log.e(TAG, "onReceivePdu FOREGROUND SERVICE: $msg_from")
-                            Toast.makeText(context, msgBody, Toast.LENGTH_LONG).show()
+                            Log.e(TAG, "onSendSMS FOREGROUND SERVICE: SMS Sent")
                         }
                     } catch (e: Exception) {
 //                            Log.d("Exception caught",e.getMessage());

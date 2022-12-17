@@ -25,24 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
     print(savedNumber);
   }
 
-  Future<void> _startSmsReceiver() async {
-    print('I am inside start sms receiver !!!!!!!!!!!!!!!!!!');
-    const platform = const MethodChannel('tyre.plex');
-    try {
-      final result = await platform.invokeMethod('startSmsReceiver');
-      print('i am start sms receiver result fo HOME &&&&&&&&& ${result}');
-    } on PlatformException catch (e) {
-      print("Failed to invoke method: '${e.message}'.");
-    }
-  }
-
   Future<void> _startService() async {
     const platform = const MethodChannel('tyre.plex');
     try {
       final result = await platform.invokeMethod('startExampleService');
-      // setState(() {
-      //   _serverState = result;
-      // });
     } on PlatformException catch (e) {
       print("Failed to invoke method: '${e.message}'.");
     }
@@ -52,9 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
     const platform = const MethodChannel('tyre.plex');
     try {
       final result = await platform.invokeMethod('stopExampleService');
-      // setState(() {
-      //   _serverState = result;
-      // });
     } on PlatformException catch (e) {
       print("Failed to invoke method: '${e.message}'.");
     }
@@ -62,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // _startService();
     super.initState();
   }
   @override
