@@ -7,6 +7,7 @@ import 'package:ops/screen/homeScreen/controller/home_screen_controller.dart';
 import 'package:ops/navigation/route_constants.dart';
 import 'package:ops/navigation/router.dart';
 import 'package:ops/util/function.dart';
+import 'package:ops/util/sms/smsReceiver.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:telephony/telephony.dart' as tel;
@@ -85,6 +86,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
   await Firebase.initializeApp();
+  SmsReceiver().initReceiver();
   runApp(const MyApp());
 }
 

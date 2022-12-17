@@ -63,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // SmsReceiver().onInit();///////////////////////////////////////////// /////////////
     // TODO: implement initState
+    // SmsReceiver().initReceiver(); ///////////////////////////////////////////////// ////////////////
     // _startService();
     super.initState();
   }
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     HomeScreenController homeController = Get.put(HomeScreenController());
-    // SmsReceiver smsReceiver = Get.put(SmsReceiver());
+     // SmsReceiver smsReceiver = Get.put(SmsReceiver());
     TextEditingController phoneController = TextEditingController();
     final prefs = SharedPreferences.getInstance();
     return Scaffold(

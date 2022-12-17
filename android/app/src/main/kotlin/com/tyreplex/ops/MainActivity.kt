@@ -18,6 +18,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import android.net.ConnectivityManager
 
 
 class MainActivity : FlutterActivity() {
@@ -25,8 +26,15 @@ class MainActivity : FlutterActivity() {
      val MCHANNEL = "tyre.plex"
     val ECHANNEL = "tyre.plex.sms.receiver"
 
+//    private val Smsreceiver: BroadcastReceiver = Sms()
+//    override fun onStart() {
+//        super.onStart()
+//        registerReceiver(Smsreceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+//    }
 
-// ...............................*..................*...........................*.....................*
+
+
+    // ...............................*..................*...........................*.....................*
 //     GeneratedPluginRegistrant.registerWith(flutterEngine)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -58,9 +66,12 @@ class MainActivity : FlutterActivity() {
                 result.success("Stopped!")
             }
             else if(call.method == "startSmsReceiver" ) {
+//                val Smsreceiver: BroadcastReceiver = Sms()
+//                registerReceiver(Smsreceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
 
-                var received = startService(Intent(this,  Sms::class.java))
-                result.success(received)
+//                var received = startService(Intent(this,  Sms::class.java))
+//                result.success(received)
+//                -result.success("Successfully hit Sms receiver")
             }
             else {
                 result.notImplemented()

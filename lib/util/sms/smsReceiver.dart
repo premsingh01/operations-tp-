@@ -4,24 +4,20 @@ import 'package:ops/screen/homeScreen/controller/home_screen_controller.dart';
 import 'package:permission_handler/permission_handler.dart' as per;
 
 
-class SmsReceiver extends GetxController{
+class SmsReceiver {
 
-  @override
-  void onInit() {
-    print('i have enetered sms receiver onInit state %%%%%%%%%%%%%%%%%%%%%');
+  void initReceiver(){
     getPermission().then((value) {
       if (value) {
         smsStream().listen((event) {
-          print('__________________________@__________________@________ START');
-          var sms = event;
-          print('SMS RECEIVED ############# ${sms}');
-          HomeScreenController().sendSms('9876543210', sms);
+          // print('__________________________@__________________@________ START');
+          // var sms = event;
+          // print('SMS RECEIVED ############# ${sms}');
+          // HomeScreenController().sendSms('9876543210', sms);
           // setState(() {});
         });
       }
     });
-    // TODO: implement onInit
-    super.onInit();
   }
 
 

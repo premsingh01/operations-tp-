@@ -91,8 +91,6 @@ class HomeScreenController extends GetxController {
 
     var message = "Sender Name: $SenderNo \n Body: $smsBody";
      print('HomeScreen controller send sms working after shared preference');
-    //url_launcher
-    // ur.launch('sms: $mobileNumber?body=$message');
 
     // method channel for sending sms
     await platform.invokeMethod("sendsms", <String, dynamic>{
