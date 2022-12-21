@@ -8,104 +8,27 @@ import 'package:ops/util/function.dart';
 import 'package:ops/util/sms/smsReceiver.dart';
 import 'package:permission_handler/permission_handler.dart' as per;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:telephony/telephony.dart' as tel;
-import 'package:flutter_sms/flutter_sms.dart' as fs;
-import 'package:url_launcher/url_launcher.dart' as ur;
 
 import '../../../main.dart';
+import '../../../util/permission.dart';
 
 class HomeScreenController extends GetxController {
   Timer? _timer;
 
   @override
   void onInit() {
-    // getBatteryOptimizationPermission();
-    // _startService();
-    // getSmsPermission();
-    // initPlatformState();
-    //  receiveSms();
-    // _timer = Timer.periodic(Duration(seconds: 10), (timer) => testing());
+    Permission().getBatteryOptimizationPermission();
+    tryTest();
+    print('i am in HomeScreenController');
+    // _timer = Timer.periodic(Duration(seconds: 14), (timer) => testing());
     // TODO: implement onInit
     super.onInit();
-  }
-
-  MethodChannel platform = const MethodChannel('tyre.plex');
-
-   startService() async {
-    try {
-      final result = await platform.invokeMethod('startExampleService');
-      // setState(() {
-      //   _serverState = result;
-      // });
-    } on PlatformException catch (e) {
-      print("Failed to invoke method: '${e.message}'.");
-    }
-  }
-
-   _stopService() async {
-    try {
-      final result = await platform.invokeMethod('stopExampleService');
-      // setState(() {
-      //   _serverState = result;
-      // });
-    } on PlatformException catch (e) {
-      print("Failed to invoke method: '${e.message}'.");
-    }
-  }
-
-  //receiving device messages on app
-  // receiveSms() {
-  //   tel.Telephony telephony = tel.Telephony.instance;
-  //   telephony.listenIncomingSms(
-  //     listenInBackground: true,
-  //     onBackgroundMessage: backgrounMessageHandler,
-  //     onNewMessage: (tel.SmsMessage message) {
-  //       print('Sender Name: ${message.address}'); //+977981******67, sender number
-  //       print('Body: ${message.body}'); //sms text
-  //
-  //       String? senderno = message.address;
-  //       String? smsBody = message.body;
-  //
-  //       sendSms(senderno, smsBody);
-  //     },
-  //
-  //   );
-  // }
-
-  Future<void> sendSms(String? SenderNo, String? smsBody) async {
-     print('HomeScreen controller send sms working');
-    final prefs = await SharedPreferences.getInstance();
-    String? Number = prefs.getString('number');
-    String mobileNumber = '+91$Number';
-
-    var message = "Sender Name: $SenderNo \n Body: $smsBody";
-     print('HomeScreen controller send sms working after shared preference');
-
-    // method channel for sending sms
-    await platform.invokeMethod("sendsms", <String, dynamic>{
-      "phone": mobileNumber,
-      "msg": message,
-    }
-    );
-     print('HomeScreen controller after sending Sms');
-
-    //flutter_sms(WORKS ONLY IN FOREGROUND)
-    // List<String> recipents = ["+91$Number"];
-    //
-    // String _result = await fs.sendSMS(message: message, recipients: recipients, sendDirect: true)
-    //     .catchError((onError) {
-    //   print(onError);
-    // });
-    // print(_result);
-
-    //telephony(works only in emulator) for both
-    // tel.Telephony.instance.sendSms(to: '$mobileNumber', message: '$message');
   }
 
   CommonFunctions controller = CommonFunctions();
 
   tryTest() {
-    _timer = Timer.periodic(Duration(seconds: 60), (timer) => testing());
+    _timer = Timer.periodic(Duration(seconds: 14), (timer) => testing());
   }
 
   testing() async {
@@ -119,37 +42,25 @@ class HomeScreenController extends GetxController {
     //   'i', 'am', 'post', 'api', 'response',
     // ];
 
-    //postGeoLocation ke lat ko String se Double krna h
-    //await controller.postGeoLocation(lat, long, place);
+    await controller.postGeoLocation(lat, long, place);
   }
 
-  getBatteryOptimizationPermission() async {
-    var BatteryStatus = per.Permission.ignoreBatteryOptimizations;
-    if (await BatteryStatus.isPermanentlyDenied) {
-      print('Battery Optimization is permenantly denied');
-      per.Permission.ignoreBatteryOptimizations.request();
+  Future<void> startService() async {
+    MethodChannel platform = const MethodChannel('tyre.plex');
+    try {
+      final result = await platform.invokeMethod('startExampleService');
+    } on PlatformException catch (e) {
+      print("Failed to invoke method: '${e.message}'.");
     }
-    if (await BatteryStatus.isRestricted || await BatteryStatus.isDenied) {
-      per.Permission.ignoreBatteryOptimizations.request();
-    }
-
-    per.Permission.ignoreBatteryOptimizations.isGranted;
-
-    return;
   }
 
-  getSmsPermission() async {
-    var smsStatus = per.Permission.sms;
-    if (await smsStatus.isPermanentlyDenied) {
-      print('Sms permission is permenantly denied');
-      per.Permission.sms.request();
+  Future<void> stopService() async {
+    MethodChannel platform = const MethodChannel('tyre.plex');
+    try {
+      final result = await platform.invokeMethod('stopExampleService');
+    } on PlatformException catch (e) {
+      print("Failed to invoke method: '${e.message}'.");
     }
-    if (await smsStatus.isRestricted || await smsStatus.isDenied) {
-      per.Permission.sms.request();
-    }
-
-    per.Permission.sms.isGranted;
-    return;
   }
 
 // location as loc

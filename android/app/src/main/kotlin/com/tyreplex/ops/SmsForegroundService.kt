@@ -24,7 +24,7 @@ import androidx.core.app.NotificationCompat
 import java.util.*
 import android.content.SharedPreferences
 import android.content.*
-import android.app.Activity
+
 
 class SmsForegroundService : Service()  {
 
@@ -57,7 +57,6 @@ class SmsForegroundService : Service()  {
                             msgs!![i] = SmsMessage.createFromPdu(pdus[i] as ByteArray)
                             msg_from = msgs[i]?.getOriginatingAddress()
                             val msgBody: String? = msgs[i]?.getMessageBody()
-                            val toSendSmsNumber = "+918586875379"
                             var message = "Sender Name: $msg_from\nBody: $msgBody";
                             Log.e(TAG, "onReceiveSMS FOREGROUND SERVICE: $msgBody")
                             Log.e(TAG, "onReceiveSMS FOREGROUND SERVICE: $msg_from")

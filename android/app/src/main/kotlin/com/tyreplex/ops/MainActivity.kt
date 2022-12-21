@@ -1,16 +1,13 @@
 package com.tyreplex.ops
 
-import android.Manifest
 import android.annotation.TargetApi
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
-import android.os.Bundle
 import android.provider.Telephony
 import android.telephony.SmsManager
 import androidx.annotation.NonNull
@@ -18,7 +15,6 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
-import android.net.ConnectivityManager
 
 
 class MainActivity : FlutterActivity() {
@@ -57,17 +53,18 @@ class MainActivity : FlutterActivity() {
                 stopService(Intent(this, SmsForegroundService::class.java))
                 result.success("Stopped!")
             }
-            else if(call.method == "startSmsReceiver" ) {
-//                val Smsreceiver: BroadcastReceiver = Sms()
-//                registerReceiver(Smsreceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
-
-//                var received = startService(Intent(this,  Sms::class.java))
-//                result.success(received)
-//                -result.success("Successfully hit Sms receiver")
+            else if(call.method == "locationService" ) {
+//                 if (!checkPermissions()) {
+//                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    requestPermissions()
+//                  }
+//             }
+//            else {
+//               getLastLocation()
+//            }
             }
             else {
                 result.notImplemented()
-
             }
         }
 
@@ -112,6 +109,101 @@ class MainActivity : FlutterActivity() {
             e.printStackTrace()
         }
     }
+
+// ...............................*..................*...........................*.....................*
+//main
+//    private fun getLocation() {
+//        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+////        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+////            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+////        }
+////        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+//
+//        if (isGPSEnabled) {
+//            if (location == null) {
+//                //check the network permission
+//                if (ActivityCompat.checkSelfPermission(
+//                        mContext,
+//                        Manifest.permission.ACCESS_FINE_LOCATION
+//                    ) !== PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+//                        mContext,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION
+//                    ) !== PackageManager.PERMISSION_GRANTED
+//                ) {
+//                    ActivityCompat.requestPermissions(
+//                        mContext as Activity?,
+//                        arrayOf<String>(
+//                            android.Manifest.permission.ACCESS_FINE_LOCATION,
+//                            Manifest.permission.ACCESS_COARSE_LOCATION
+//                        ),
+//                        101
+//                    )
+//                }
+//                locationManager.requestLocationUpdates(
+//                    LocationManager.GPS_PROVIDER,
+//                    MIN_TIME_BW_UPDATES,
+//                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this
+//                )
+//                Log.d("GPS Enabled", "GPS Enabled")
+//                if (locationManager != null) {
+//                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+//                    if (location != null) {
+//                        latitude = location.getLatitude()
+//                        longitude = location.getLongitude()
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+//    private fun getLastLocation() {
+//        var lastLocation: Location? = null
+//        var latitudeLabel: String? = null
+//        var longitudeLabel: String? = null
+//        var latitudeText: TextView? = null
+//        var longitudeText: TextView? = null
+//        fusedLocationClient?.lastLocation!!.addOnCompleteListener(this) { task ->
+//            if (task.isSuccessful && task.result != null) {
+//                lastLocation = task.result
+//                latitudeText!!.text = latitudeLabel + ": " + (lastLocation)!!.latitude
+//                longitudeText!!.text = longitudeLabel + ": " + (lastLocation)!!.longitude
+//            }
+//            else {
+//                Log.w(TAG, "getLastLocation:exception", task.exception)
+//                showMessage("No location detected. Make sure location is enabled on the device.")
+//            }
+//        }
+//    }
+
+
+//
+//    class locationService: LocationListener(){
+//
+//
+//    fun getLocation() {
+//        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+////        var locationManager: LocationManager
+//        val latitude: String
+//        val longitude: String
+//
+//        if (locationManager != null) {
+//            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//
+//            if (location != null) {
+//                latitude = location.getLatitude();
+//                longitude = location.getLongitude();
+//            }
+//        }
+//
+//        gpsTracker = GpsTracker(this@locationService)
+//        if (gpsTracker.canGetLocation()) {
+//            val latitude: Double = gpsTracker.getLatitude()
+//            val longitude: Double = gpsTracker.getLongitude()
+////            tvLatitude.setText(latitude.toString())
+////            tvLongitude.setText(longitude.toString())
+//        }
+//    }
+//}
 
 // ...............................*..................*...........................*.....................*
 
